@@ -102,7 +102,7 @@ def login_valid(cursor: sqlite3.Cursor, email: str, password: str):
 
 
 # create .db file or connect to it if it exists
-connection = sqlite3.connect("../database.db")
+connection = sqlite3.connect("database.db")
 
 # A cursor is an object used to make the connection for executing SQL queries.
 cursor = connection.cursor()
