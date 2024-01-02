@@ -4,7 +4,8 @@ import db
 
 import re
 
-"""Populate the tables in the database with data - interactive"""
+"""Populate the tables in the database with data - interactive admin 'shell'"""
+print(" Admin Shell - Add films, actors, and populate any tables here! \n################################################################\n")
 
 def insertRecord(tableName:str, level:int):
     """Insert a record into the table tableName through a
@@ -69,7 +70,16 @@ def insertRecord(tableName:str, level:int):
 
     db.conn.commit()
 while True:
-    try:
-        insertRecord(input("Enter a table to populate: "), level=1)
-    except sqlite3.OperationalError as err:
-        print(f"\x1b[31m{err}\x1b[0m")
+    tableName = input("[ User | Review | Movie | ActorRole | Actor ]\nEnter a table to populate, or type 'SQL' to run a custom SQL command: ")
+    tableName = tableName.strip()
+    if tableName.upper() == "SQL":
+        try:
+            db.exec(input("SQL Statement: "))
+            db.display()
+        except (sqlite3.OperationalError, sqlite3.Warning) as err:
+            print(f"You caused an error: \x1b[31m{err}\x1b[0m")
+    else:
+        try:
+            insertRecord(tableName, level=1)
+        except sqlite3.OperationalError as err:
+            print(f"\x1b[31m{err}\x1b[0m")

@@ -10,6 +10,10 @@ def exec(statement: str, parameters: tuple = tuple()):
 
 
 def display():
+    if cur.description == None:
+        print("\x1b[90mNo data fetched.\x1b[0m")
+        return None
+
     """Print the result of the previous SQL statement to the console as a pretty table; return the data in the table"""
     rows = cur.fetchall()
 
