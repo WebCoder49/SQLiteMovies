@@ -5,7 +5,6 @@ import db
 import re
 
 """Populate the tables in the database with data - interactive admin 'shell'"""
-print(" Admin Shell - Add films, actors, and populate any tables here! \n################################################################\n")
 
 def insertRecord(tableName:str, level:int):
     """Insert a record into the table tableName through a
@@ -69,17 +68,33 @@ def insertRecord(tableName:str, level:int):
         );
 
     db.conn.commit()
-while True:
-    tableName = input("[ User | Review | Movie | ActorRole | Actor ]\nEnter a table to populate, or type 'SQL' to run a custom SQL command: ")
-    tableName = tableName.strip()
-    if tableName.upper() == "SQL":
-        try:
-            db.exec(input("SQL Statement: "))
-            db.display()
-        except (sqlite3.OperationalError, sqlite3.Warning) as err:
-            print(f"You caused an error: \x1b[31m{err}\x1b[0m")
-    else:
-        try:
-            insertRecord(tableName, level=1)
-        except sqlite3.OperationalError as err:
-            print(f"\x1b[31m{err}\x1b[0m")
+
+def adminShell():
+    print()
+    print("\x1b[93m\x1b[7m Admin Shell \x1b[0m")
+
+    while True:
+        tableName = input("[ User | Review | Movie | ActorRole | Actor ]\nEnter a table name from above to populate, or type 'SQL' to run a custom SQL command, or type 'Logout' to return to normal-user view: ")
+        print()
+
+        tableName = tableName.strip()
+        if tableName.upper() == "LOGOUT":
+          return
+        elif tableName.upper() == "SQL":
+            try:
+                db.exec(input("SQL Statement: "))
+                db.display()
+                db.conn.commit()
+            except (sqlite3.OperationalError, sqlite3.Warning) as err:
+                print(f"You caused an error: {err}")
+        else:
+            try:
+                insertRecord(tableName, level=1)
+            except sqlite3.OperationalError as err:
+                print(f"\x1b[31m{err}\x1b[0m")
+
+        print("\n\x1b[0m", end="")
+        print()
+
+if __name__ == "__main__":
+    adminShell()
